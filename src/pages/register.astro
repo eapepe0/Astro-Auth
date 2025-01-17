@@ -11,7 +11,7 @@ import AuthLayout from "@/layouts/AuthLayout.astro";
             <h3 class="font-semibold text-2xl text-gray-800">Registro</h3>
             <p class="text-gray-500">Registra tu cuenta.</p>
           </div>
-          <div class="space-y-5">
+          <form class="space-y-5">
             <div class="space-y-2">
                 <label class="text-sm font-medium text-gray-700 tracking-wide"
                   >Nombre</label
@@ -19,6 +19,7 @@ import AuthLayout from "@/layouts/AuthLayout.astro";
                 <input
                   class="w-full text-base px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-400"
                   type="text"
+                  name="name"
                   placeholder="Juan Perez"
                 />
               </div>
@@ -30,6 +31,7 @@ import AuthLayout from "@/layouts/AuthLayout.astro";
                 class="w-full text-base px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-400"
                 type="email"
                 placeholder="mail@gmail.com"
+                name="email"
               />
             </div>
             <div class="space-y-2">
@@ -42,6 +44,7 @@ import AuthLayout from "@/layouts/AuthLayout.astro";
                 class="w-full content-center text-base px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-400"
                 type="password"
                 placeholder="Enter your password"
+                name="password"
               />
             </div>
             <div class="flex items-center justify-between">
@@ -67,13 +70,14 @@ import AuthLayout from "@/layouts/AuthLayout.astro";
             </div>
             <div>
               <button
+                id="btn-submit"
                 type="submit"
-                class="w-full flex justify-center bg-green-400 hover:bg-green-500 text-gray-100 p-3 rounded-full tracking-wide font-semibold shadow-lg cursor-pointer transition ease-in duration-500"
+                class="disabled:bg-gray-300 w-full flex justify-center bg-green-400 hover:bg-green-500 text-gray-100 p-3 rounded-full tracking-wide font-semibold shadow-lg cursor-pointer transition ease-in duration-500"
               >
                 Registrame
               </button>
             </div>
-          </div>
+          </form>
           <div class="pt-5 text-center text-gray-400 text-xs">
             <span>
               Copyright © 2021-{new Date().getFullYear()}
@@ -89,3 +93,39 @@ import AuthLayout from "@/layouts/AuthLayout.astro";
         </div>
       </div>
 </AuthLayout>
+
+
+<script>
+import { actions } from "astro:actions";
+
+  // obtenemos el form
+  const form = document.querySelector('form');
+  // obtenemos el boton submit
+  const btnSubmit = document.querySelector('#btn-submit')
+
+  // agregamos un event listener al submit en el formulario
+  form?.addEventListener('submit', async(e) => {
+    e.preventDefault() // evitamos que se resetee
+    // deshabilitamos el boton
+    btnSubmit?.setAttribute('disabled' , 'disabled');
+
+    // obtenemos los datos del formulario
+    const formData = new FormData(form) 
+
+    // mandamos esos datos a la accion registerUser
+    const {data , error } = await actions.registerUser(formData)
+
+    // si hay algun error , formulario vacio o no cumple con los requerimientos de zo
+    if(error){
+      alert(error)
+      return 
+    }
+    // mostramos el resultado del servidor 'Ok'
+    console.log(data)
+    
+    // habilitamos nuevamente el boton
+    btnSubmit?.removeAttribute('disabled')
+
+
+  })
+</script>
