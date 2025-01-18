@@ -15,8 +15,18 @@ export const registerUser = defineAction({
         remember_me : z.boolean().optional(), // booleano opcional
     }),// si no se cumple este esquema lanzara un error
     // función que maneja la acción. Recibe los datos validados como argumento.
-    handler: async ({name , email , password , remember_me}) => {
-        console.log({name , email , password , remember_me})
-        return true;// retorna esto
+    handler: async ({name , email , password , remember_me} , {cookies}) => {
+        // si apretamos "Recuerdame"
+        if(remember_me){
+            cookies.set('email', email ,{
+                expires : new Date(Date.now() + 1000 * 60 * 60 * 24 * 365 ), // 1 año
+                path : '/', // esta cookie abarca toda la app
+            })
+        } else{
+            cookies.delete('email',{
+                path: '/' // especificamos la cookie con el path
+            })
+        }
+        return {ok : true , msg : 'Usuario creado'};// retorna esto
     },
 });

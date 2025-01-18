@@ -1,6 +1,11 @@
 ---
 import AuthLayout from "@/layouts/AuthLayout.astro";
 
+const email = Astro.cookies.get('email') ?.value ?? ''; // si existe el cookie o sera un string vacio
+const remember_me = !!email // hacemos doble negacion para transformar a booleano
+
+console.log(email)
+
 
 ---
 
@@ -32,6 +37,7 @@ import AuthLayout from "@/layouts/AuthLayout.astro";
                 type="email"
                 placeholder="mail@gmail.com"
                 name="email"
+                value={email}
               />
             </div>
             <div class="space-y-2">
@@ -54,6 +60,7 @@ import AuthLayout from "@/layouts/AuthLayout.astro";
                   name="remember_me"
                   type="checkbox"
                   class="h-4 w-4 bg-blue-500 focus:ring-blue-400 border-gray-300 rounded"
+                  checked={remember_me}
                 />
                 <label
                   for="remember_me"
