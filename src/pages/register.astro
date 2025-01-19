@@ -104,6 +104,7 @@ console.log(email)
 
 <script>
 import { actions } from "astro:actions";
+import Swal from 'sweetalert2';
 
   // obtenemos el form
   const form = document.querySelector('form');
@@ -124,15 +125,18 @@ import { actions } from "astro:actions";
 
     // si hay algun error , formulario vacio o no cumple con los requerimientos de zo
     if(error){
-      alert(error)
-      return 
+      // mostramos un alerta con el error.
+      Swal.fire({
+        icon : "error",
+        title : "Credenciales incorrectas",
+        text : error.message
+      })
+      // habilitamos nuevamente el boton
+      btnSubmit?.removeAttribute('disabled')
+      return
     }
-    // mostramos el resultado del servidor 'Ok'
-    console.log(data)
-    
-    // habilitamos nuevamente el boton
-    btnSubmit?.removeAttribute('disabled')
 
-
+    // navegamos al area protegida
+    window.location.replace('/protected')  
   })
 </script>
