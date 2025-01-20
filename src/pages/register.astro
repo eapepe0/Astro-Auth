@@ -4,8 +4,6 @@ import AuthLayout from "@/layouts/AuthLayout.astro";
 const email = Astro.cookies.get('email') ?.value ?? ''; // si existe el cookie o sera un string vacio
 const remember_me = !!email // hacemos doble negacion para transformar a booleano
 
-console.log(email)
-
 
 ---
 
