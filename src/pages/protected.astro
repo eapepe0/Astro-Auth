@@ -2,22 +2,40 @@
 import { firebase } from "@/firebase";
 import MainLayout from "@/layouts/MainLayout.astro";
 
-// tomamos los datos del usuario
-const firebaseUser = firebase.auth.currentUser;
+const {user , isLoggedIn} = Astro.locals; /* extraemos de locals */
 
-// si no tenemos datos vamos a la pantalla de /login
-if (firebaseUser === null) {
-  return Astro.redirect("/login");
+/* si no estamos logeados o no tenemos un usuario vamos a /login */
+if(!isLoggedIn || !user){
+  return Astro.redirect("/login")
 }
 
-const {
+const {avatar , email , emailVerified , name} = user;
+
+
+
+
+
+/*##################################################################################  */
+/****   ESTO LO USAREMOS SI NO USAMOS locals , conviene tener la logica directamente en el middleware *******/
+
+// tomamos los datos del usuario
+/* const firebaseUser = firebase.auth.currentUser; */
+
+// si no tenemos datos vamos a la pantalla de /login
+/* if (firebaseUser === null) {
+  return Astro.redirect("/login");
+} */
+
+/* await firebaseUser?.reload(); */ /* siempre tenemos los ultimos datos del usuario */
+
+/* const {
   displayName ,
   email,
   emailVerified,
   photoURL,
 } = firebaseUser;
 
-const name = displayName ?? 'No display Name';
+const name = displayName ?? 'No display Name'; */
 ---
 
 <MainLayout>
@@ -27,10 +45,10 @@ const name = displayName ?? 'No display Name';
   >
     <div class="card w-96 mx-auto bg-white shadow-xl hover:shadow rounded-xl">
 		{
-			photoURL ? (
+			avatar ? (
 			<img
 				class="w-32 mx-auto rounded-full -mt-20 border-8 border-white"
-				src={photoURL}
+				src={avatar}
 				alt={`Avatar de ${name}`}
       		/>
 			) : (
