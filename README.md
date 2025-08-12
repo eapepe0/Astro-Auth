@@ -23,4 +23,4 @@ Es una sección donde usaremos la autenticación de Firebase para validar y prot
 
 ## Deploy
 
-[Link a la pagina]()
+[Link a la pagina](https://astro-auth-proyecto.netlify.app/)
