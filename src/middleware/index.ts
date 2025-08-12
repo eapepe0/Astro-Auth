@@ -3,7 +3,7 @@ import type { MiddlewareNext } from "astro";
 import { defineMiddleware } from "astro:middleware";
 
 const privateRoutes = ['/protected']; // definimos las rutas que seran protegidas
-
+const notAuthenticatedRoutes = ['/login' , '/register']; // rutas que no puedes entrar si ya estas autenticado
 
 // desestructuramos del context el url , la request y locals
 
@@ -25,7 +25,7 @@ const privateRoutes = ['/protected']; // definimos las rutas que seran protegida
 
 
 
-export const onRequest = defineMiddleware(({url , request , locals} , next)=>{
+export const onRequest = defineMiddleware(({url , request , locals , redirect} , next)=>{
 
     // <-- por aca pasan todas las peticiones  --> 
 
@@ -41,6 +41,17 @@ export const onRequest = defineMiddleware(({url , request , locals} , next)=>{
             name : user.displayName! , /* siempre tendremos un displayName */
             emailVerified : user.emailVerified, /* es un booleano */
         }
+    }
+
+
+    /* Si el usuario no esta logueado y quiere ingresar a una ruta privada  */
+    if(!isLoggedIn && privateRoutes.includes(url.pathname)){
+        return redirect('/'); /* vamos al root */
+    }
+
+    /* Si estas logueado y queres ingresar a las rutas que deberias entrar si no tenes un usuario */
+    if(isLoggedIn && notAuthenticatedRoutes.includes(url.pathname)){
+        return redirect('/'); /* vamos al root */
     }
     
     return next()
