@@ -5,8 +5,8 @@ import { firebase } from "@/firebase";
 import { defineAction } from "astro:actions";
 import { z } from 'astro:schema';
 import { createUserWithEmailAndPassword, type AuthError } from "firebase/auth";
-import { updateProfile } from "firebase/auth";
-import { sendEmailVerification } from "firebase/auth/cordova";
+import { updateProfile , sendEmailVerification  } from "firebase/auth";
+
 
 // siempre exportamos y definimos la accion
 export const registerUser = defineAction({
