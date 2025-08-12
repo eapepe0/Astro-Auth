@@ -5,6 +5,8 @@ import { firebase } from "@/firebase";
 import { defineAction } from "astro:actions";
 import { z } from 'astro:schema';
 import { createUserWithEmailAndPassword, type AuthError } from "firebase/auth";
+import { updateProfile } from "firebase/auth";
+import { sendEmailVerification } from "firebase/auth/cordova";
 
 // siempre exportamos y definimos la accion
 export const registerUser = defineAction({
@@ -34,10 +36,15 @@ export const registerUser = defineAction({
             const user = await createUserWithEmailAndPassword(firebase.auth, email , password)
 
             // Actualizar el nombre (displayName)
-
+            updateProfile(firebase.auth.currentUser! , {
+                displayName : name
+            })
             // Verificar el correo electronico
-
-            return JSON.stringify(user);
+            await sendEmailVerification(firebase.auth.currentUser! , {
+                /* url: 'http://localhost:4321/protected?emailVerified=true', */
+                url: `${import.meta.env.WEBSITE_URL}/protected?emailVerified=true`,
+            })
+            return user;
 
         } catch (error) {
 
@@ -50,6 +57,6 @@ export const registerUser = defineAction({
             throw new Error('Auxilio algo salio mal')
         }
 
-        return {ok : true , msg : 'Usuario creado'};// retorna esto
+
     },
 });
